@@ -1,0 +1,66 @@
+------- Product ------------
+---- GLOBAL_ANALYSIS_FORECAST_PHYS_001_015 ----
+Dataset : MetO-GLO-PHYS-daily  -- Connexion WMS : True 
+------- Product ------------
+---- GLOBAL_REANALYSIS_BIO_001_019 ----
+Dataset : dataset-global-nahindcast-bio-001-019-V5-o2  -- Connexion WMS : False 
+Dataset : dataset-global-nahindcast-bio-001-019-V5-no3  -- Connexion WMS : False 
+Dataset : dataset-global-nahindcast-bio-001-019-V5-chl  -- Connexion WMS : False 
+Dataset : dataset-global-nahindcast-bio-001-019-V5-po4  -- Connexion WMS : False 
+Dataset : dataset-global-nahindcast-bio-001-019-V5-si  -- Connexion WMS : False 
+------- Product ------------
+---- GLOBAL_REANALYSIS_BIO_001_018 ----
+Dataset : dataset-global-nahindcast-bio-001-018-V5-po4  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-pp  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-fe  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-si  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-no3  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-chl  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-o2  -- Connexion WMS : True 
+Dataset : dataset-global-nahindcast-bio-001-018-V5-phyc  -- Connexion WMS : True 
+------- Product ------------
+---- GLOBAL_REANALYSIS_PHYS_001_009 ----
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-monthly-ssh  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-daily-ice  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-monthly-ice  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-daily-u-v  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-daily-ssh  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-monthly-s  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-monthly-t  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-monthly-u-v  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-coordinates  -- Connexion WMS : False 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-daily-t  -- Connexion WMS : True 
+Dataset : dataset-global-reanalysis-phys-001-009-ran-fr-glorys2v3-daily-s  -- Connexion WMS : True 
+------- Product ------------
+---- GLOBAL_ANALYSIS_PHYS_001_020 ----
+Dataset : dataset-armor-3d-v4-cmems-v2  -- Connexion WMS : False 
+------- Product ------------
+---- GLOBAL_ANALYSIS_FORECAST_BIO_001_014 ----
+Dataset : dataset-global-analysis-forecast-bio-001-014  -- Connexion WMS : True 
+------- Product ------------
+---- GLOBAL_REP_PHYS_001_013 ----
+Dataset : dataset-armor-3d-rep-weekly-v3-1-myocean  -- Connexion WMS : False 
+Dataset : dataset-armor-3d-rep-monthly-v3-1-myocean  -- Connexion WMS : False 
+------- Product ------------
+---- GLOBAL_REANALYSIS_PHYS_001_011 ----
+Dataset : dataset-global-reanalysis-phys-001-011-ran-it-cglors-daily-t-s-u-v-ssh-ice  -- Connexion WMS : False 
+Dataset : dataset-global-reanalysis-phys-001-011-ran-it-cglors-monthly-t-ssh  -- Connexion WMS : False 
+Dataset : dataset-global-reanalysis-phys-001-011-ran-it-cglors-monthly-ice  -- Connexion WMS : False 
+Dataset : dataset-global-reanalysis-phys-001-011-ran-it-cglors-monthly-u-v  -- Connexion WMS : False 
+Dataset : dataset-global-reanalysis-phys-001-011-ran-it-cglors-monthly-s  -- Connexion WMS : False 
+------- Product ------------
+---- GLOBAL_REANALYSIS_PHYS_001_017 ----
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-daily-gridt  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-sst  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-5day-gridu  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-5day-gridv  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-ssh  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-gridv  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-icemod  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-gridt  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-gridu  -- Connexion WMS : True 
+Dataset : global-reanalysis-phys-001-017-ran-uk-orap5.0-grids  -- Connexion WMS : True 
+------- Product ------------
+---- GLOBAL_ANALYSIS_FORECAST_PHYS_001_002 ----
+Dataset : global-analysis-forecast-phys-001-002-2hourly-t-u-v-ssh  -- Connexion WMS : True 
+Dataset : global-analysis-forecast-phys-001-002  -- Connexion WMS : True 

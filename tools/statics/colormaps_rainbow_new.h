@@ -1,0 +1,1 @@
+/home/cregnier/DEV/Create_palette/colormaps_rainbow_new.h
