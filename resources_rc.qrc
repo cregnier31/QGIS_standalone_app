@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images">
+       <file>icons/mIconAtlas.png</file>
+       <file>icons/mActionZoomFullExtent.png</file>
+       <file>icons/removeLayer.png</file>
+       <file>icons/mActionRemoveAllFromOverview.png</file>
+       <file>icons/mIconInfo.png</file>
+       <file>icons/mIconTransparency.png</file>
+       <file>icons/mActionDraw.png</file>
+    </qresource>
+</RCC>

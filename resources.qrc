@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/images">
+       <file>icons/mActionAddRasterLayer.png</file>
+       <file>icons/mActionDraw.png</file>
+       <file>icons/mActionZoomIn.png</file>
+       <file>icons/mIconPolygonLayer.png</file>
+       <file>icons/expand.png</file>
+       <file>icons/mActionAddRasterLayer.png</file>
+       <file>icons/mActionPan.png</file>
+       <file>icons/mActionZoomOut.png</file>
+       <file>icons/removeLayer.png</file>
+       <file>icons/mActionAddLayer.png</file>
+       <file>icons/mActionAddWmsLayer.png</file>
+       <file>icons/mActionSaveMapAsImage.png</file>
+       <file>icons/mActionZoomToLayer.png</file>
+       <file>icons/symbology.png</file>
+       <file>icons/mActionAddOgrLayer.png</file>
+       <file>icons/mActionAddWmsLayer.png</file>
+       <file>icons/mActionToggleEditing.png</file>
+       <file>icons/mIconLineLayer.png</file>
+       <file>icons/mActionAddOgrLayer.png</file>
+       <file>icons/mActionAddGridLayer.png</file>
+       <file>icons/mActionCapturePoint.png</file>
+       <file>icons/mActionZoomFullExtent.png</file>
+       <file>icons/mIconPointLayer.png</file>
+       <file>icons/mIconInfo.png</file>
+       <file>icons/mIconAtlas.png</file>
+       <file>icons/VectorFieldRendererIcon.png</file>
+       <file>icons/mActionRemoveAllFromOverview.png</file>
+       <file>icons/mIconTransparency.png</file>
+       <file>icons/mIconContour.svg</file>
+       <file>icons/icon_svg2color.png</file>
+       <file>icons/mActionCapturePolygon.png</file>
+       <file>icons/mActionCaptureLine.png</file>
+       <file>icons/mActionCapturePoint2.png</file>
+       <file>icons/mActionCapturePolygon.png</file>
+       <file>icons/mActionIdentify.svg</file>
+       <file>icons/mIconRasterLayer.svg</file>
+    </qresource>
+</RCC>
