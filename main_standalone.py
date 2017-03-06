@@ -36,11 +36,6 @@ from matplotlib.mlab import griddata
 from VectorScaleBox import VectorScaleBox
 from VectorScaleBoxPluginLayer import VectorScaleBoxPluginLayer
 #from ThreddsViewer.ThreddsViewer import ThreddsViewer
-<<<<<<< HEAD
-print "import Thredds"
-=======
-print 'Import thredds'
->>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
 from THREDDSExplorer.Thredds_explorer import THREDDSViewer
 print 'OK thredds'
 ## Mercator Main Qgis Standalone Application
