@@ -36,6 +36,7 @@ from matplotlib.mlab import griddata
 from VectorScaleBox import VectorScaleBox
 from VectorScaleBoxPluginLayer import VectorScaleBoxPluginLayer
 #from ThreddsViewer.ThreddsViewer import ThreddsViewer
+print "import Thredds"
 from THREDDSExplorer.Thredds_explorer import THREDDSViewer
 print 'OK thredds'
 ## Mercator Main Qgis Standalone Application
@@ -1749,6 +1750,12 @@ def main():
     try : 
         app = QApplication(sys.argv)
         standalone=int(sys.argv[1])
+        if QgsApplication.showSettings() :
+	   print "Settings OK"
+ 	   print QgsApplication.showSettings()
+	else :
+	   print "settings nok"
+	   sys.exit(1)
         window = Mercator_Explorer(standalone)
         window.show()
         window.raise_()
