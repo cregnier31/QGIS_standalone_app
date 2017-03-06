@@ -249,10 +249,14 @@ class VisorController(QObject):
             self.standardMessage.emit("Downloading '"+layerName+"' [WMS], please wait...")
             lectorWMS = WMS.WMSparser(threddsMapObject.getWMS())
             lectorWMS.createMapLayer(layerName,styleName,boundingBox, timeRequested)
+	    print "create result image"
             resultImage = (lectorWMS.getLastCreatedMapLayer(),layerName,"WMS")
+	    print "create result image ok"
             QgsMessageLog.logMessage("WMS Layer Name: " + layerName, "THREDDS Explorer", QgsMessageLog.INFO )
             QgsMessageLog.logMessage("WMS timeRequested: " + timeRequested, "THREDDS Explorer", QgsMessageLog.INFO )
+	    print "Emit"
             self.mapImageRetrieved.emit(resultImage)
+	    print "Emit OK"
 
     def asyncFetchWMSImageFile(self, threddsMapObject, layerName, styleName, timeRangeRequested, boundingBox):
         """Will perform an async request for the layer to the WMS server,
