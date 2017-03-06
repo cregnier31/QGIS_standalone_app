@@ -5,6 +5,8 @@ from PyQt4 import QtGui, QtCore
 from PyQt4 import uic
 from PyQt4.QtCore import pyqtSlot, SIGNAL, Qt
 from PyQt4.QtGui import QMessageBox, QStatusBar
+from qgis.core import QgsMessageLog
+from qgis.core import QgsLayerTreeGroup, QgsMapLayerRegistry
 import sys,os,cPickle,io,urllib2
 import numpy as np
 import xml.etree.ElementTree as ET
@@ -40,23 +42,19 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
     """ Main Class for thredds viewing"""
 
     def __init__(self,canvas,parent=None):
-        print "inside init"
         self.canvas=canvas
 	if parent == None :
 	   parent=os.getcwd()
 	print "Parent %s" %(parent)
         super(THREDDSViewer, self).__init__(parent)
         self.setupUi(self)
-	print "Setup_ui ok"
         self.logger= logging.getLogger('THREDDSViewer')
         self.logger.setLevel(20)
         # We add a status bar to this QDockWidget:
         self.statusbar = QStatusBar()
         self.gridLayout.addWidget(self.statusbar)
         self.gridLayout_7.addWidget(self.statusbar)
-	print "Init UX"
         #self.initUX(parent)
-	print "Init UX Ok"
         #self.initProxy(parent)
         self.installEventFilter(self)
         logging.basicConfig()
@@ -102,13 +100,11 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.wmsAvailableTimes = []
         self.firstRunThisSession = True
 
-
     def show(self):
    ##     self.logger.info("Inside Show function")
    ##     print self.canvas
    ##     print self
-   ##     self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea, self)
-   ##     print "add dock ok"
+        self.canvas.addDockWidget(Qt.LeftDockWidgetArea, self)
    ##     if self.canvas and not self.canvas.mainWindow().restoreDockWidget(self):
    ##         self.logger.info("Add dockwidget")
    ##         self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea, self)
@@ -748,7 +744,7 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         :type image: (QgsRasterLayer, String, String)
 
         """
-
+        print "Show new image"
         self.postInformationMessageToUser("Layer '"+image[1]+"' ["+image[2]+"]retrieved")
         layer = image[0]
         if layer and layer.isValid():
@@ -1098,23 +1094,25 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         else:
             self.postInformationMessageToUser("There was a problem showing the time series.")
 
-#    @pyqtSlot(QgsLayerTreeGroup, list)
-#    def _onNewLayerGroupGenerated(self, groupObject, layerList):
-#        """
-#        Currently only used to show the first image of a newly created group
-#        so the user knows when the operation finishes.
-#
-#        :param groupObject: The legend group object which was created.
-#        :type  groupObject: QgsLayerTreeGrupo
-#
-#        :param layerList: The layers which are held in the group object.
-#        :type  layerList: [QgsLayer]
-#        """
-#        if (layerList[0]).isValid():
-#            iface.legendInterface().setLayerVisible(layerList[0], True)
-#        else:
-#            self.postInformationMessageToUser("There was a problem showing a layer.")
-#
+    @pyqtSlot(QgsLayerTreeGroup, list)
+    def _onNewLayerGroupGenerated(self, groupObject, layerList):
+       """
+       Currently only used to show the first image of a newly created group
+       so the user knows when the operation finishes.
+
+       :param groupObject: The legend group object which was created.
+       :type  groupObject: QgsLayerTreeGrupo
+
+       :param layerList: The layers which are held in the group object.
+       :type  layerList: [QgsLayer]
+       """
+       print "_onNewLayerGroupGenerated"
+       if (layerList[0]).isValid():
+          # iface.legendInterface().setLayerVisible(layerList[0], True)
+           self.canvas.legendInterface().setLayerVisible(layerList[0], True)
+       else:
+           self.postInformationMessageToUser("There was a problem showing a layer.")
+
 
 
     @pyqtSlot()
