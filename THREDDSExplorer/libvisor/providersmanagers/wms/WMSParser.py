@@ -188,13 +188,17 @@ class WMSparser(QObject):
         print("LayerName :"+layerName)
 
         resultLayer = QgsRasterLayer(finalUrl, layerName, 'wms')
-        print resultLayer
+        if resultLayer.isValid():
+           print "Layer is valid"
+           print resultLayer
+        else :
+           print "Layer is not valid"
         print ("Wms uri : "+resultLayer.dataProvider().dataSourceUri())
-        print (self.qgisWMSThack+resultLayer.dataProvider().dataSourceUri() 
-               + "?TIME={time}%26COLORSCALERANGE={scale}%26BBOX={bbox}"
-                 .format(time = layerTime,
-                 scale=rasterMinMaxValues,
-                 bbox=str(boundingBox)) )
+        ##print (self.qgisWMSThack+resultLayer.dataProvider().dataSourceUri() 
+        ##       + "?TIME={time}%26COLORSCALERANGE={scale}%26BBOX={bbox}"
+        ##         .format(time = layerTime,
+        ##         scale=rasterMinMaxValues,
+        ##         bbox=str(boundingBox)) )
         #HACK taken from Anita Graser's Time Manager:
         #https://github.com/anitagraser/TimeManager/blob/master/raster/wmstlayer.py
         #(Under GPL2 license) with an extra added for COLORSCALERANGE ncWMS attribute
@@ -211,6 +215,8 @@ class WMSparser(QObject):
                                                                bbox=str(boundingBox)))
         
         if resultLayer.isValid():
+            print "add maplayer"
+            print type(self)
             self.mapLayer = resultLayer
         else:
             raise StandardError('No se pudo crear una capa válida.')
