@@ -6,7 +6,7 @@ Created on 28 de mar. de 2016
 from PyQt4.QtCore import QObject, pyqtSignal
 from qgis.core import QgsRectangle, QgsLayerTreeLayer, QgsLayerTreeGroup, \
                          QgsProject, QgsMapLayerRegistry
-from qgis.utils import iface
+#from qgis.utils import iface
 from threading import RLock
 
 class LayerGroupifier(QObject):
@@ -73,7 +73,10 @@ class LayerGroupifier(QObject):
             self.correctlyRegisteredLayers = sorted(self.layerList, key=lambda layer: layer.name())
             for layer in self.correctlyRegisteredLayers:
                 self.generatedGroup.addLayer(layer)
-                iface.legendInterface().setLayerVisible(layer, False)
+		print "set visible layer"
+                print type(self)
+		self.canvas.legendInterface().setLayerVisible(layer, False)
+               # iface.legendInterface().setLayerVisible(layer, False)
             
             #We combine the group extents so all the layers are zoomed
             #equally on play.
@@ -83,8 +86,11 @@ class LayerGroupifier(QObject):
                 if isinstance(child, QgsLayerTreeLayer):
                     extent.combineExtentWith( child.layer().extent() )
         
-            iface.mapCanvas().setExtent( extent )
-            iface.mapCanvas().refresh()
+	    print "set extend"
+            self.canvas.setExtent( extent )
+            self.canvas.refresh()
+            #iface.mapCanvas().setExtent( extent )
+            #iface.mapCanvas().refresh()
             
             if self.errorCount > 0:
                 self.errorsFound.emit(self.errorCount)
