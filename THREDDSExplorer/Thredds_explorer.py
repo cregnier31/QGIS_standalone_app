@@ -42,12 +42,8 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
     """ Main Class for thredds viewing"""
 
     def __init__(self,canvas,parent=None):
-<<<<<<< HEAD
-=======
-        print "inside init"
         print type(self)
         print type(canvas)
->>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
         self.canvas=canvas
 	if parent == None :
 	   parent=os.getcwd()
@@ -61,11 +57,8 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.statusbar = QStatusBar()
         self.gridLayout.addWidget(self.statusbar)
         self.gridLayout_7.addWidget(self.statusbar)
-<<<<<<< HEAD
         #self.initUX(parent)
         #self.initProxy(parent)
-=======
->>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
         self.installEventFilter(self)
         logging.basicConfig()
 ##      Add the controller
@@ -114,12 +107,9 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
    ##     self.logger.info("Inside Show function")
    ##     print self.canvas
    ##     print self
-<<<<<<< HEAD
         self.canvas.addDockWidget(Qt.LeftDockWidgetArea, self)
-=======
   ##      self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea, self)
    ##     print "add dock ok"
->>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
    ##     if self.canvas and not self.canvas.mainWindow().restoreDockWidget(self):
    ##         self.logger.info("Add dockwidget")
         print type(self)
