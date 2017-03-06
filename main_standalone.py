@@ -36,7 +36,11 @@ from matplotlib.mlab import griddata
 from VectorScaleBox import VectorScaleBox
 from VectorScaleBoxPluginLayer import VectorScaleBoxPluginLayer
 #from ThreddsViewer.ThreddsViewer import ThreddsViewer
+<<<<<<< HEAD
 print "import Thredds"
+=======
+print 'Import thredds'
+>>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
 from THREDDSExplorer.Thredds_explorer import THREDDSViewer
 print 'OK thredds'
 ## Mercator Main Qgis Standalone Application
@@ -164,10 +168,12 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
     
     def ThreddsViewer(self): 
 	print "Launch threddsViewer"
+        canvas=self.canvas
+        print type(canvas)
         install_dir=os.getcwd()
 	print install_dir
         #thredds = THREDDSViewer(self,install_dir)
-        thredds = THREDDSViewer(self,self.canvas)
+        thredds = THREDDSViewer(self,canvas)
 	print "Launch threddsViewer show"
       #  self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea,thredds)
         #self.addDockWidget(Qt.RightDockWidgetArea,thredds)
@@ -588,7 +594,7 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             valore = float(rasterSlider.value())
             valoi  = rasterSlider.value()
             valoi255 = (valoi) * 255. / 100.
-            valoi255 = 255. - (valoi255)          
+            valoi255 = 255. - (valoi255) 
             valo   = (100. - valore) / 100.
             for iLayer in range(self.canvas.layerCount()):
                 layer = self.canvas.layer(iLayer)

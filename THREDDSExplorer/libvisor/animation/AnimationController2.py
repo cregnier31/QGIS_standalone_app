@@ -5,23 +5,25 @@ Created on 28 de ene. de 2016
 '''
 
 # Standard libs:
+print "Control 1"
 import time
 import traceback
 import threading
 from datetime import timedelta
 
 # QGIS /PyQt libs:
-from qgis.utils import iface
+#from qgis.utils import iface
 from qgis.core import QgsMessageLog
 from PyQt4.QtCore import QObject, QTimer, pyqtSignal, pyqtSlot, Qt
-
 # Our libs:
-from libvisor.animation.Animation2 import AnimationData
-from libvisor.animation import AnimationOtherLayerManager
-from libvisor.animation.AnimationLayer import AnimationLayer
-from libvisor.utilities.LayerLegendGroupifier import LayerGroupifier
-from libvisor.providersmanagers.wcs.WCSBatchDownloadUtil import WCSDownloadWorkerThread
-from libvisor.providersmanagers.wms.WMSBatchDownloadUtil import WMSDownloadWorkerThread
+print "Control 2"
+from THREDDSExplorer.libvisor.animation.Animation2 import AnimationData
+from THREDDSExplorer.libvisor.animation import AnimationOtherLayerManager
+from THREDDSExplorer.libvisor.animation.AnimationLayer import AnimationLayer
+from THREDDSExplorer.libvisor.utilities.LayerLegendGroupifier import LayerGroupifier
+from THREDDSExplorer.libvisor.providersmanagers.wcs.WCSBatchDownloadUtil import WCSDownloadWorkerThread
+from THREDDSExplorer.libvisor.providersmanagers.wms.WMSBatchDownloadUtil import WMSDownloadWorkerThread
+print "Control 3"
 
 class Controller(QObject):
     """Manages all operations required to handle animation operations.
@@ -83,7 +85,8 @@ class Controller(QObject):
         self.timer = QTimer()
         self.timer.timeout.connect(self.onNextFrameRequested)
         self.createLayerGroupsOnMainThread.connect(self.createLayerGroup)
-        iface.mapCanvas().setParallelRenderingEnabled(True)
+        #iface.mapCanvas().setParallelRenderingEnabled(True)
+        self.mapCanvas().setParallelRenderingEnabled(True)
         self.timeDeviationTolerance = None
         self.timeDeltaPerFrame = None
         self.initialize()
@@ -150,7 +153,8 @@ class Controller(QObject):
                 layer = animation.getFrameByTime(self.nextFrame,
                                                   self.timeDeviationTolerance)
                 try:
-                    iface.legendInterface().setLayerVisible(layer, True)
+                    #iface.legendInterface().setLayerVisible(layer, True)
+                    self.legendInterface().setLayerVisible(layer, True)
                 except RuntimeError:
                     #Will happen if the animator attempts to set as visible
                     #a no longer existing layer (i.e. if the user removes

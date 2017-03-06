@@ -5,9 +5,9 @@ Created on 27 de ene. de 2016
 '''
 from PyQt4.QtGui import QWidget
 from PyQt4.QtCore import pyqtSignal, pyqtSlot, SIGNAL
-from libvisor.providersmanagers.wms.WMSParser import WMSparser
-from libvisor.animation import Animation_add_wms_layer
-from libvisor.animation.AnimationLayer import AnimationLayer
+from THREDDSExplorer.libvisor.providersmanagers.wms.WMSParser import WMSparser
+from THREDDSExplorer.libvisor.animation import Animation_add_wms_layer
+from THREDDSExplorer.libvisor.animation.AnimationLayer import AnimationLayer
 from urllib2 import HTTPError, URLError
 from _socket import timeout
 

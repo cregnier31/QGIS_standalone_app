@@ -14,16 +14,17 @@ from datetime import timedelta
 from httplib import HTTPException
 
 # QGIS / PyQt libs:
-from qgis.utils import iface
+#from qgis.utils import iface
 from PyQt4.QtCore import QTime
 from PyQt4.QtGui import QMessageBox
 from qgis.core import QgsMessageLog
 from PyQt4.Qt import pyqtSlot, pyqtSignal, Qt
 from PyQt4.QtGui import QTableWidgetItem, QDockWidget
+print "Import animation controler"
 
 # Our libs:
-from libvisor.animation.AnimationController2 import Controller
-from libvisor.animation import AnimationWCSManager, AnimationWMSManager, Animation_menu
+from THREDDSExplorer.libvisor.animation.AnimationController2 import Controller
+from THREDDSExplorer.libvisor.animation import AnimationWCSManager, AnimationWMSManager, Animation_menu
 
 class AnimationFrame(QDockWidget):
     """Animation widget UI manager.
@@ -42,9 +43,9 @@ class AnimationFrame(QDockWidget):
         self.animationUI = Animation_menu.Ui_dockAnimationWidget()
         self.animationUI.setupUi(self)
 
-        if iface and not iface.mainWindow().restoreDockWidget(self):
-            iface.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
-
+        #if iface and not iface.mainWindow().restoreDockWidget(self):
+        #    iface.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
+        self.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
         self.mapObject = None
         self.addLayerMenu = None
 
@@ -76,7 +77,8 @@ class AnimationFrame(QDockWidget):
         self.animationUI.timeFrameVariation.setTime(QTime(1, 0, 0))
         self._timeVariationChanged(QTime(1, 0, 0))
 
-        iface.addDockWidget( Qt.LeftDockWidgetArea, self )
+        self.addDockWidget( Qt.LeftDockWidgetArea, self )
+        #iface.addDockWidget( Qt.LeftDockWidgetArea, self )
 
     def initController(self):
         """Initializes a new controller to handle all the animation functions."""

@@ -42,10 +42,17 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
     """ Main Class for thredds viewing"""
 
     def __init__(self,canvas,parent=None):
+<<<<<<< HEAD
+=======
+        print "inside init"
+        print type(self)
+        print type(canvas)
+>>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
         self.canvas=canvas
 	if parent == None :
 	   parent=os.getcwd()
 	print "Parent %s" %(parent)
+        self.parent=parent
         super(THREDDSViewer, self).__init__(parent)
         self.setupUi(self)
         self.logger= logging.getLogger('THREDDSViewer')
@@ -54,8 +61,11 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.statusbar = QStatusBar()
         self.gridLayout.addWidget(self.statusbar)
         self.gridLayout_7.addWidget(self.statusbar)
+<<<<<<< HEAD
         #self.initUX(parent)
         #self.initProxy(parent)
+=======
+>>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
         self.installEventFilter(self)
         logging.basicConfig()
 ##      Add the controller
@@ -104,14 +114,24 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
    ##     self.logger.info("Inside Show function")
    ##     print self.canvas
    ##     print self
+<<<<<<< HEAD
         self.canvas.addDockWidget(Qt.LeftDockWidgetArea, self)
+=======
+  ##      self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea, self)
+   ##     print "add dock ok"
+>>>>>>> 6cc56f16769c096d5f9547520f0a6137237cbdc1
    ##     if self.canvas and not self.canvas.mainWindow().restoreDockWidget(self):
    ##         self.logger.info("Add dockwidget")
-   ##         self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea, self)
-   ##         self.logger.info("Add dockwidget ok")
-
+        print type(self)
+        self.logger.info("Add dockwidget")
+        self.canvas.addDockWidget(Qt.RightDockWidgetArea, self)
+        self.logger.info("Add dockwidget ok")
         self.logger.info("Show")
         super(THREDDSViewer, self).show()
+	print "Init UX"
+        #self.initUX(self.parent)
+	print "Init UX Ok"
+        #self.initProxy(self.parent)
 
    ##     if self.firstRunThisSession:
    ##         self.firstRunChecks()
@@ -136,6 +156,7 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
 
         """ Init UX with a list of area """
 
+        self.logger.info("Load catalog for UX")
         list_area=['ARCTIC','BAL','GLOBAL','IBI','MED','NWS']
         for area in list_area : 
             self.combo_area_list.addItem(str(area))

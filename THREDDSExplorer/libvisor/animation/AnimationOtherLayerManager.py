@@ -3,7 +3,7 @@ Created on 22 de feb. de 2016
 
 @author: IHC
 '''
-from libvisor.animation import Animation_add_others
+from THREDDSExplorer.libvisor.animation import Animation_add_others
 from PyQt4.QtGui import QWidget, QPushButton
 from PyQt4.QtCore import pyqtSlot, pyqtSignal
 
