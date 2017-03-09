@@ -1,6 +1,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui,QtNetwork
+from PyQt4.QtNetwork import *
 from qgis.core import *
 from qgis import core
 from qgis.gui import *
@@ -37,6 +38,7 @@ from VectorScaleBox import VectorScaleBox
 from VectorScaleBoxPluginLayer import VectorScaleBoxPluginLayer
 #from ThreddsViewer.ThreddsViewer import ThreddsViewer
 from THREDDSExplorer.Thredds_explorer import THREDDSViewer
+import logging
 print 'OK thredds'
 ## Mercator Main Qgis Standalone Application
 ## C.REGNIER November 2015
@@ -50,7 +52,21 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             self.ll_standalone=True
         else :
             self.ll_standalone=False
-        print self.ll_standalone
+        self.logger= logging.getLogger('MainWindow')
+        self.logger.setLevel(20)
+        CONF_PATH=os.getcwd()
+        print CONF_PATH
+        #CONF_PATH="/home/cregnier/SVN/mo/TEP_CLASS4_V3/script"
+        filename = [CONF_PATH+'/qgis_settings.cfg']
+        if os.path.isfile(filename[0]) :
+            param_dict=Loader.factory('NML').load(filename)
+        else :
+            print (filename[0]+" doesn't exist")
+            sys.exit(1)
+        ## Load settings
+        print "OK1 init proxy"
+        self.setup_proxy(param_dict)
+        print "OK setup proxy"
         self.debug=0
         self.resize(1600, 800)
         self.setupUi(self)
@@ -67,7 +83,6 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
         workdialog=DefWorkdir()
         workdialog.show()
         if workdialog.exec_() == QDialog.Accepted:
-            print "OK1"
             self.tmp_path = str(workdialog.work_field.text())
         else :
             print 'Workdir not define'
@@ -158,9 +173,88 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
         self.toolZoomIn.setAction(self.actionZoomIn)
         self.toolZoomOut = QgsMapToolZoom(self.canvas, True) # true = out
         self.toolZoomOut.setAction(self.actionZoomOut)
+        ## Test  WMS
+        finalUrl="&crs=EPSG:4326&srs=EPSG:4326&dpiMode=7&format=image/png&WIDTH=2048&HEIGHT=2048&SERVICE=WMS&layers=poc&styles=boxfill/sst_36&url=http://oceanwatch.pfeg.noaa.gov/thredds/wms/satellite/VH3/poc/1day"
+        layerName="test"
+        print type(self)
+        #resultLayer = QgsRasterLayer(finalUrl, layerName, 'wms')
+        #if resultLayer.isValid():
+        #    print "resultLayer is valid WMS OK"
+        #else: 
+        #    print "resultLayer is not valid" 
+        #QgsMapLayerRegistry.instance().addMapLayer(resultLayer)
+        #band=1
+        #self.addLayer(resultLayer,band)
+        #self.compose=1
+        ### Enabled group palette
+        #self.GroupBoxPal.setEnabled(True)
         # Init memory Layers
         #self.setupMapLayers()
-    
+    def setup_proxy(self,param_dict):
+
+        """  Proxy settings """
+
+        s = QSettings() #getting proxy from qgis options settings
+        s.beginGroup('proxy')
+        my_settings={"Proxy enabled": u'proxy/proxyEnabled', "Proxy Host": u'proxy/proxyHost',"Proxy Type": u'proxy/proxyType',
+                "Proxy Port": u'proxy/proxyPort',"Proxy User": u'proxy/proxyUser', "Proxy Pass": u'proxy/proxyPassword' }
+        my_proxy=my_settings
+        my_proxy['Proxy enabled']=str(param_dict.get('proxy_params','use_proxy'))
+        my_proxy['Proxy Host']=str(param_dict.get('proxy_params','proxy_server_host'))
+        my_proxy['Proxy Type']="HttpProxy"
+        my_proxy['Proxy Port']=int(param_dict.get('proxy_params','proxy_server_port'))
+        my_proxy['Proxy User']=str(param_dict.get('proxy_params','proxy_username'))
+        my_proxy['Proxy Pass']=str(param_dict.get('proxy_params','proxy_password'))
+        self.proxyserver=my_proxy['Proxy Host']
+        self.proxyuser=my_proxy['Proxy User']
+        self.proxypass=my_proxy['Proxy Pass']
+        self.cmemsuser=str(param_dict.get('cmems_server','user_cmems'))
+        self.cmemspass=str(param_dict.get('cmems_server','pass_cmems'))
+        print 'setup proxy'
+        ##my_proxy={"Proxy enabled": True, "Proxy Host ": "proxy.mercator-ocean.fr", "Proxy Port": 8080, 
+        ##          "Proxy User": "cregnier","Proxy Pass": "32chachaMO", "Proxy Type": "HttpProxy"}
+        current_choice=my_proxy
+        for key, val in my_settings.iteritems():
+            print str(key)+":"+str(val)
+            settings_key=key
+            for key2, val2 in current_choice.iteritems():
+                if key2==settings_key:
+                    settings_val=val2
+            current_setting = s.value(str(val).decode('unicode-escape'))
+            s.setValue(unicode(str(val)), settings_val)
+        s.sync()
+        # procedure to set proxy if needed
+        proxyEnabled = s.value("proxy/proxyEnabled", "")
+        proxyType = s.value("proxy/proxyType", "" )
+        proxyHost = s.value("proxy/proxyHost", "" )
+        proxyPort = s.value("proxy/proxyPort", "" )
+        proxyUser = s.value("proxy/proxyUser", "" )
+        proxyPassword = s.value("proxy/proxyPassword", "" )
+        if proxyEnabled == "true": # test if there are proxy settings
+            print "Enabled proxy"
+            proxy = QtNetwork.QNetworkProxy()
+            print "ok"
+            if proxyType == "DefaultProxy":
+               proxy.setType(QNetworkProxy.DefaultProxy)
+            elif proxyType == "Socks5Proxy":
+               proxy.setType(QNetworkProxy.Socks5Proxy)
+            elif proxyType == "HttpProxy":
+               proxy.setType(QNetworkProxy.HttpProxy)
+               print "Set httpProxy"
+            elif proxyType == "HttpCachingProxy":
+               proxy.setType(QNetworkProxy.HttpCachingProxy)
+            elif proxyType == "FtpCachingProxy":
+               proxy.setType(QNetworkProxy.FtpCachingProxy)
+            proxy.setPort(int(proxyPort.toPyObject()))
+            proxy.setHostName(proxyHost.toPyObject())
+            proxy.setUser(proxyUser.toPyObject())
+            proxy.setPassword(proxyPassword.toPyObject())
+            QNetworkProxy.setApplicationProxy(proxy)
+            self.network_manager=QgsNetworkAccessManager.instance()
+            stringlist= ""
+            self.network_manager.setupDefaultProxyAndCache ()
+            self.network_manager.setFallbackProxyAndExcludes(proxy, stringlist)
+
     def ThreddsViewer(self): 
 	print "Launch threddsViewer"
         canvas=self.canvas
