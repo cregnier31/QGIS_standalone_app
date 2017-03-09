@@ -5,6 +5,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4 import uic
 from PyQt4.QtCore import pyqtSlot, SIGNAL, Qt
 from PyQt4.QtGui import QMessageBox, QStatusBar
+from PyQt4.QtNetwork import *
 from qgis.core import QgsMessageLog
 from qgis.core import QgsLayerTreeGroup, QgsMapLayerRegistry
 import sys,os,cPickle,io,urllib2
@@ -45,9 +46,9 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         print type(self)
         print type(canvas)
         self.canvas=canvas
-	if parent == None :
-	   parent=os.getcwd()
-	print "Parent %s" %(parent)
+        if parent == None :
+           parent=os.getcwd()
+        print "Parent %s" %(parent)
         self.parent=parent
         super(THREDDSViewer, self).__init__(parent)
         self.setupUi(self)
@@ -760,7 +761,20 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         layer = image[0]
         if layer and layer.isValid():
             QgsMapLayerRegistry.instance().addMapLayer(layer)
+            band=1
+            self.canvas.setExtent(layer.extent())
+            self.canvas.layers.append( QgsMapCanvasLayer(layer) )
+            self.canvas.freeze(False)
+            # set the map canvas layer set
+            self.canvas.refresh()
+            self.canvas.update()
+            self.canvas.zoomToFullExtent()
             self.canvas.zoomToActiveLayer()
+            self.canvas.compose=1
+            self.compose=1
+            ### Enabled group palette
+            self.canvas.GroupBoxPal.setEnabled(True)
+            print "enabled ok"
             self.canvas.legendInterface().refreshLayerSymbology(layer)
         else:
             self.postInformationMessageToUser("There was a problem loading the layer.")
