@@ -660,19 +660,23 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
 
         if self.uiAnimation is None:
             self.logger.info("Add animation frame")
-##            self.uiAnimation = AnimationFrame(parent = self)
-##            self.uiAnimation.errorSignal.connect(self.postCriticalErrorToUser)
-##
-##            self.controller.mapInfoRetrieved.connect(self.uiAnimation.setAnimationInformation)
-##            if None is not self.currentMap :
-##                self.uiAnimation.setAnimationInformation(self.currentMap)
-##
-##            self.uiAnimation.show()
-##            self.button_req_animation.setText("Hide animation menu <<")
-##        else:
-##            self.uiAnimation.hide()
-##            self.uiAnimation = None
-##            self.button_req_animation.setText("Show animation menu >>")
+            self.uiAnimation = AnimationFrame(parent = self.canvas)
+            self.uiAnimation.errorSignal.connect(self.postCriticalErrorToUser)
+
+            self.logger.info("Connect to controler")
+            self.controller.mapInfoRetrieved.connect(self.uiAnimation.setAnimationInformation)
+            if None is not self.currentMap :
+                self.uiAnimation.setAnimationInformation(self.currentMap)
+            	self.logger.info("Current not None")
+
+            self.logger.info("Show animation")
+            self.uiAnimation.show()
+            self.logger.info("Show animation OK")
+            self.button_req_animation.setText("Hide animation menu <<")
+        else:
+            self.uiAnimation.hide()
+            self.uiAnimation = None
+            self.button_req_animation.setText("Show animation menu >>")
 
     def clearData(self):
         self.WMSBoundingBoxInfo.setText("No Bounding Box or CRS information available.")
