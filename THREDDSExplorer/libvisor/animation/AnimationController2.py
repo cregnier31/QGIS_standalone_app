@@ -80,13 +80,13 @@ class Controller(QObject):
 
         super(Controller, self).__init__(parent)
         self.paused = True
-
+        self.canvas=parent
         self.playbackSpeed = 500
         self.timer = QTimer()
         self.timer.timeout.connect(self.onNextFrameRequested)
         self.createLayerGroupsOnMainThread.connect(self.createLayerGroup)
         #iface.mapCanvas().setParallelRenderingEnabled(True)
-        self.mapCanvas().setParallelRenderingEnabled(True)
+        self.canvas.setParallelRenderingEnabled(True)
         self.timeDeviationTolerance = None
         self.timeDeltaPerFrame = None
         self.initialize()
@@ -154,7 +154,7 @@ class Controller(QObject):
                                                   self.timeDeviationTolerance)
                 try:
                     #iface.legendInterface().setLayerVisible(layer, True)
-                    self.legendInterface().setLayerVisible(layer, True)
+                    self.canvas.legendInterface().setLayerVisible(layer, True)
                 except RuntimeError:
                     #Will happen if the animator attempts to set as visible
                     #a no longer existing layer (i.e. if the user removes
