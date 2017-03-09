@@ -20,10 +20,9 @@ class NmlLoader(Loader):
     def load(self,filename):
         print "Inside Loader"
         db = ConfigParser.ConfigParser()
-        for file in filename :
-            print "Filename %s " %(file)
+        
+        for file in filename : 
             db.read(os.path.expanduser(file))
-            print db.read(os.path.expanduser(file))
         if not db.sections():
             print "Error : Configuration file not found %s ! " %(filename)
             sys.exit(1)
