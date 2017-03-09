@@ -40,12 +40,13 @@ class AnimationFrame(QDockWidget):
     def __init__(self, parent = None):
         super(AnimationFrame, self).__init__(parent)
         self.parent = parent
+        self.canvas = parent
         self.animationUI = Animation_menu.Ui_dockAnimationWidget()
         self.animationUI.setupUi(self)
 
         #if iface and not iface.mainWindow().restoreDockWidget(self):
         #    iface.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
-        self.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
+        self.canvas.addDockWidget(Qt.RightDockWidgetArea, self)
         self.mapObject = None
         self.addLayerMenu = None
 
@@ -77,7 +78,7 @@ class AnimationFrame(QDockWidget):
         self.animationUI.timeFrameVariation.setTime(QTime(1, 0, 0))
         self._timeVariationChanged(QTime(1, 0, 0))
 
-        self.addDockWidget( Qt.LeftDockWidgetArea, self )
+        self.canvas.addDockWidget( Qt.LeftDockWidgetArea, self )
         #iface.addDockWidget( Qt.LeftDockWidgetArea, self )
 
     def initController(self):
