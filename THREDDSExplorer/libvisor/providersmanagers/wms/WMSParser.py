@@ -12,7 +12,8 @@ import xml.etree.ElementTree as ET
 # QGIS / PyQt libs:
 from qgis.core import QgsRasterLayer
 from PyQt4.Qt import pyqtSignal, QObject
-
+from PyQt4.QtNetwork import *
+from PyQt4 import QtCore
 # Our libs:
 from THREDDSExplorer.libvisor.providersmanagers.wms import WmsLayerInfo
 from THREDDSExplorer.libvisor.providersmanagers.BoundingBoxInfo import BoundingBox
@@ -215,8 +216,6 @@ class WMSparser(QObject):
                                                                bbox=str(boundingBox)))
         
         if resultLayer.isValid():
-            print "add maplayer"
-            print type(self)
             self.mapLayer = resultLayer
         else:
             raise StandardError('No se pudo crear una capa válida.')
