@@ -72,24 +72,30 @@ class Controller(QObject):
     errorSignal = pyqtSignal(str)
     statusSignal = pyqtSignal(str)
 
-    def __init__(self, parent=None):
+    def __init__(self,parent=None):
         """Constructor."""
 
         #TODO: Remove debug
         #import sys
-
+        print "Constructor Controller"
         super(Controller, self).__init__(parent)
+        print "Super ok"
         self.paused = True
+        print type(parent)
         self.canvas=parent
         self.playbackSpeed = 500
         self.timer = QTimer()
+        print "Const ok1"
         self.timer.timeout.connect(self.onNextFrameRequested)
         self.createLayerGroupsOnMainThread.connect(self.createLayerGroup)
+        print "Super ok 2"
         #iface.mapCanvas().setParallelRenderingEnabled(True)
         self.canvas.setParallelRenderingEnabled(True)
+        print "Super ok 3"
         self.timeDeviationTolerance = None
         self.timeDeltaPerFrame = None
         self.initialize()
+        print "Super ok 4"
 
     def initialize(self):
         self.animationBeginTime = None
@@ -112,6 +118,7 @@ class Controller(QObject):
     # Methods to assist in playback
     #
     def play(self):
+        print "inside play"
         if self.animationGroups is not None and len(self.animationGroups) != 0:
             self.timer.start(self.playbackSpeed)
             self.paused = False
@@ -121,6 +128,7 @@ class Controller(QObject):
         self.timer.stop()
 
     def togglePlay(self):
+        print "inside togglePlay controller"
         if self.paused:
             self.play()
         else:
@@ -135,13 +143,14 @@ class Controller(QObject):
             return 0
 
     def onNextFrameRequested(self):
+        print "onNextFrameRequested"
         if self.nextFrame is None or self.nextFrame < self.animationBeginTime:
             self.nextFrame = self.animationBeginTime
         elif self.nextFrame > self.animationEndTime:
-            #print("====END====")
-            #print(self.nextFrame)
-            #print(self.animationEndTime)
-            #print("====END====")
+            print("====END====")
+            print(self.nextFrame)
+            print(self.animationEndTime)
+            print("====END====")
             self.pause()
             self.nextFrame = self.animationBeginTime
             self.animationPlaybackEnd.emit()
@@ -153,8 +162,10 @@ class Controller(QObject):
                 layer = animation.getFrameByTime(self.nextFrame,
                                                   self.timeDeviationTolerance)
                 try:
+                    print "set visible layer"
                     #iface.legendInterface().setLayerVisible(layer, True)
                     self.canvas.legendInterface().setLayerVisible(layer, True)
+                    print "add to interface"
                 except RuntimeError:
                     #Will happen if the animator attempts to set as visible
                     #a no longer existing layer (i.e. if the user removes
@@ -429,8 +440,9 @@ class Controller(QObject):
         self.createLayerGroupsOnMainThread.emit(animationLayerObject, groupName)
 
     def createLayerGroup(self, animationLayerObject, groupName):
+        print "Add layer group"
         layerList = animationLayerObject.getAnimationData().frameData.values()
-        groupifier = LayerGroupifier(layerList, groupName)
+        groupifier = LayerGroupifier(layerList, groupName,parent=self.canvas)
         groupifier.statusSignal.connect(self.statusSignal)
         groupifier.groupifyComplete.connect(self._newLegendGroupReady)
         #We assign the generated group reference to this animationLayer object

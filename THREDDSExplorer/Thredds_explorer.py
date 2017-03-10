@@ -43,9 +43,8 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
     """ Main Class for thredds viewing"""
 
     def __init__(self,canvas,parent=None):
-        print type(self)
-        print type(canvas)
         self.canvas=canvas
+        print "canvas %s" %(self.canvas)
         if parent == None :
            parent=os.getcwd()
         print "Parent %s" %(parent)
@@ -660,14 +659,20 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
 
         if self.uiAnimation is None:
             self.logger.info("Add animation frame")
-            self.uiAnimation = AnimationFrame(parent = self.canvas)
+            print type(self.canvas)
+            self.uiAnimation = AnimationFrame(parent = self.canvas,canvas=self.parent)
+            #self.uiAnimation = AnimationFrame(parent = self)
+            self.logger.info("Add ok")
             self.uiAnimation.errorSignal.connect(self.postCriticalErrorToUser)
-
             self.logger.info("Connect to controler")
             self.controller.mapInfoRetrieved.connect(self.uiAnimation.setAnimationInformation)
+            self.logger.info("Current map ")
+            self.logger.info(self.currentMap)
             if None is not self.currentMap :
                 self.uiAnimation.setAnimationInformation(self.currentMap)
             	self.logger.info("Current not None")
+            else : 
+                self.logger.info("Current map is none")
 
             self.logger.info("Show animation")
             self.uiAnimation.show()
@@ -864,7 +869,7 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
 
     @pyqtSlot(object)
     def _onMapInfoReceivedFromController(self, mapInfoObject):
-        #print("_onMapInfoReceivedFromController 1"+str(mapInfoObject))
+        print("_onMapInfoReceivedFromController 1"+str(mapInfoObject))
         self.currentMap = mapInfoObject
         #print("_onMapInfoReceivedFromController 2"+str(self.currentMap))
         if self.currentMap is not None:

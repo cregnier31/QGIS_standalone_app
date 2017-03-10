@@ -37,16 +37,21 @@ class AnimationFrame(QDockWidget):
     lock = threading.RLock()
     errorSignal = pyqtSignal(str) #We will delegate any error reporting to the class which uses this widget.
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None,canvas=None):
         super(AnimationFrame, self).__init__(parent)
         self.parent = parent
-        self.canvas = parent
+        self.canvas=canvas
+        print "canvas %s" %(self.canvas)
+        print "Parent %s" %(parent)
+
+        print type
+        print "inside constructeur"
         self.animationUI = Animation_menu.Ui_dockAnimationWidget()
         self.animationUI.setupUi(self)
 
         #if iface and not iface.mainWindow().restoreDockWidget(self):
         #    iface.mainWindow().addDockWidget(Qt.RightDockWidgetArea, self)
-        self.canvas.addDockWidget(Qt.RightDockWidgetArea, self)
+        self.parent.addDockWidget(Qt.RightDockWidgetArea, self)
         self.mapObject = None
         self.addLayerMenu = None
 
@@ -74,24 +79,36 @@ class AnimationFrame(QDockWidget):
         self.animationUI.timeTolerance.timeChanged.connect(self._toleranceChanged)
         self.animationUI.daysTolerance.valueChanged.connect(self._toleranceChanged)
 
+        print "inside constructeur 1"
         self.initController()
+        print "inside constructeur 2"
         self.animationUI.timeFrameVariation.setTime(QTime(1, 0, 0))
         self._timeVariationChanged(QTime(1, 0, 0))
+        print "inside constructeur 3"
 
-        self.canvas.addDockWidget( Qt.LeftDockWidgetArea, self )
+        self.parent.addDockWidget( Qt.LeftDockWidgetArea, self )
+        print "inside constructeur 4"
         #iface.addDockWidget( Qt.LeftDockWidgetArea, self )
 
     def initController(self):
         """Initializes a new controller to handle all the animation functions."""
-
-        self.controller = Controller(self.parent)
+        print 'inside init controller'
+        self.controller = Controller(self.canvas)
+        print 'inside init controller 1'
         self.controller.animationGenerationStepDone.connect(self._updateProgressBar)
+        print 'inside init controller 2'
         self.controller.newFrameShown.connect(self._updateSeekBar)
+        print 'inside init controller 3'
         self.controller.animatorReady.connect(self._onAnimationReady)
+        print 'inside init controller 4'
         self.controller.externalAnimationLoaded.connect(self._addLayerToAnimation)
+        print 'inside init controller 5'
         self.controller.errorSignal.connect(self._onError)
+        print 'inside init controller 6'
         self.controller.statusSignal.connect(self._updateInfoText)
+        print 'inside init controller 7'
         self.controller.animationPlaybackEnd.connect(self._onAnimationPlaybackFinish)
+        print 'inside init controller OK'
 
     @pyqtSlot()
     def _removeLayerFromAnimation(self):
@@ -275,6 +292,7 @@ class AnimationFrame(QDockWidget):
         # Sanity check to avoid QGIS crashes if the user attempts to create
         # a new animation while an old one is playing:
         if self.controller is not None:
+            print "togglePlay"
             self.controller.togglePlay()
 
     @pyqtSlot()
