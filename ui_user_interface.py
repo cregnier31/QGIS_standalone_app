@@ -78,7 +78,7 @@ class Ui_ExplorerWindow(object):
         self.vboxPalExplore.addWidget(self.secVars)
         # Create Basemap
         self.basemap=QtGui.QPushButton()
-        self.basemap.setChecked(False)
+        self.basemap.setChecked(True)
         self.basemap.setObjectName("Basemap")
         self.basemap.setText("Basemap")
         self.comp= QtGui.QCheckBox()
@@ -237,6 +237,6 @@ class Ui_ExplorerWindow(object):
         #Self.lblScale.setFrameStyle( QFrame.StyledPanel )
         #Self.lblScale.setMinimumWidth( 50 )
         #Self.statusbar.addPermanentWidget( self.lblScale, 0 )
-        self.GroupBoxPal.setEnabled(False) 
+        self.GroupBoxPal.setEnabled(True) 
         window.resize(window.sizeHint())
 
