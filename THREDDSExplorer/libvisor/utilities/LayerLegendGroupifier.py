@@ -31,6 +31,9 @@ class LayerGroupifier(QObject):
         """
         super(LayerGroupifier, self).__init__(parent)
         self.layerList = layerList
+        self.canvas=parent
+        print "Init LayerGroupifier"
+        print type(parent)
         self.groupName = groupName
         self.errorCount = 0
         self.layersToBeGrouped = 0
@@ -61,6 +64,7 @@ class LayerGroupifier(QObject):
         
         
     def groupify(self):
+        print "Inside groupify"
         with self.groupAssignmentLock:
             self.layersToBeGrouped = len(self.layerList)
             self.getGeneratedGroup()
@@ -74,7 +78,7 @@ class LayerGroupifier(QObject):
             for layer in self.correctlyRegisteredLayers:
                 self.generatedGroup.addLayer(layer)
 		print "set visible layer"
-                print type(self)
+                print type(self.canvas)
 		self.canvas.legendInterface().setLayerVisible(layer, False)
                # iface.legendInterface().setLayerVisible(layer, False)
             
