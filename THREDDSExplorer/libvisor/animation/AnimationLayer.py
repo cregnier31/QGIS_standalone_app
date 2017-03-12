@@ -98,7 +98,9 @@ class AnimationLayer(object):
         in the QGIS interface for those animated layers which
         already have them.. 
         """
+        print "set anim group"
         self.animationGroup = qgisLayerGroup
+        print "set anim group OK"
         
     def getAnimationLegendGroups(self):
         return self.animationGroup
