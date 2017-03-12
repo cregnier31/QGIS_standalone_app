@@ -24,6 +24,7 @@ print "Import animation controler"
 
 # Our libs:
 from THREDDSExplorer.libvisor.animation.AnimationController2 import Controller
+print "Import animation controler OK"
 from THREDDSExplorer.libvisor.animation import AnimationWCSManager, AnimationWMSManager, Animation_menu
 
 class AnimationFrame(QDockWidget):
@@ -93,7 +94,7 @@ class AnimationFrame(QDockWidget):
     def initController(self):
         """Initializes a new controller to handle all the animation functions."""
         print 'inside init controller'
-        self.controller = Controller(self.canvas)
+        self.controller = Controller(self.canvas,parent=self.parent)
         print 'inside init controller 1'
         self.controller.animationGenerationStepDone.connect(self._updateProgressBar)
         print 'inside init controller 2'
