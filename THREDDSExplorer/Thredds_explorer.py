@@ -1120,11 +1120,17 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
     @pyqtSlot(list, str)
     def createLayerGroup(self, layerList, groupName):
         if layerList:
+	    print "createLayerGroup"
             groupifier = LayerGroupifier(layerList, groupName)
+	    print "createLayerGroup OK1"
             groupifier.setSingleLayerSelectionModeInGroup(False)
+	    print "createLayerGroup OK2"
             groupifier.statusSignal.connect(self.postInformationMessageToUser, Qt.DirectConnection)
+	    print "createLayerGroup OK3"
             groupifier.groupifyComplete.connect(self._onNewLayerGroupGenerated)
+	    print "createLayerGroup OK4 groupifier"
             groupifier.groupify()
+	    print "createLayerGroup OK5"
         else:
             self.postInformationMessageToUser("There was a problem showing the time series.")
 
