@@ -7,6 +7,8 @@ from PyQt4.QtCore import QObject, pyqtSignal
 from qgis.core import QgsRectangle, QgsLayerTreeLayer, QgsLayerTreeGroup, \
                          QgsProject, QgsMapLayerRegistry
 #from qgis.utils import iface
+from qgis.gui import *
+from qgis.core import *
 from threading import RLock
 
 class LayerGroupifier(QObject):
@@ -20,7 +22,7 @@ class LayerGroupifier(QObject):
     groupifyComplete = pyqtSignal(QgsLayerTreeGroup, list) #Emits the created group and the list of layers assigned to it
     statusSignal = pyqtSignal(str)
     
-    def __init__(self, layerList, groupName, parent = None):
+    def __init__(self, layerList, groupName,canvas, parent = None):
         """
         :param layerList: List of layers to be added to this group.
         :type  layerList: [QgsLayer]
@@ -31,28 +33,40 @@ class LayerGroupifier(QObject):
         """
         super(LayerGroupifier, self).__init__(parent)
         self.layerList = layerList
-        self.canvas=parent
+        self.canvas=canvas
         print "Init LayerGroupifier"
         print type(parent)
+        self.parent=parent
+        print groupName
         self.groupName = groupName
         self.errorCount = 0
         self.layersToBeGrouped = 0
         self.layersAddedToGroups = 0
         self.singleLayerSelectionModeInGroup = True
         self.generatedGroup = None
+        print "Init LayerGroupifier OK"
         
     def getGeneratedGroup(self):
         """
         Returns the generated group, which may still
         be unpopulated.
         """
+        print "Get generated group"
         with self.groupAssignmentLock:
             if self.generatedGroup is None:
+                print "Group is none"
                 root = QgsProject.instance().layerTreeRoot()
+                print "Group 1"
                 self.generatedGroup = root.addGroup(self.groupName)
+                print "Group 2"
                 self.generatedGroup.setExpanded(False)
-                self.generatedGroup.setIsMutuallyExclusive(self.singleLayerSelectionModeInGroup)
+                print "Group 3"
+                #self.generatedGroup.setIsMutuallyExclusive(self.singleLayerSelectionModeInGroup)
+                print "Group 4"
                 self.generatedGroup.addedChildren.connect(self.onChildrenAddedToNodeGroup)
+                print "Add children"
+	        print self.generatedGroup
+            print "return ok"
             return self.generatedGroup
         
     def setSingleLayerSelectionModeInGroup(self, booleanValue):
@@ -71,17 +85,19 @@ class LayerGroupifier(QObject):
             registryAddedLayers = QgsMapLayerRegistry.instance().addMapLayers(self.layerList, False)
             for item in registryAddedLayers:
                 if item not in self.layerList:
-                    #print("****WARNING: A LAYER WAS NOT ADDED TO THE REGISTRY: "+str(item)+" --- ID : "+item.id())
+                    print("****WARNING: A LAYER WAS NOT ADDED TO THE REGISTRY: "+str(item)+" --- ID : "+item.id())
                     self.errorCount = self.errorCount + 1
                     pass
             self.correctlyRegisteredLayers = sorted(self.layerList, key=lambda layer: layer.name())
             for layer in self.correctlyRegisteredLayers:
                 self.generatedGroup.addLayer(layer)
-		print "set visible layer"
+                print "set visible layer identifier"
                 print type(self.canvas)
-		self.canvas.legendInterface().setLayerVisible(layer, False)
-               # iface.legendInterface().setLayerVisible(layer, False)
-            
+                print type(self.parent)
+                print (layer)
+                QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Unchecked)
+               # self.canvas.legendInterface().setLayerVisible(layer, False)
+                print "set visible layer ok"
             #We combine the group extents so all the layers are zoomed
             #equally on play.
             extent = QgsRectangle()
@@ -90,9 +106,9 @@ class LayerGroupifier(QObject):
                 if isinstance(child, QgsLayerTreeLayer):
                     extent.combineExtentWith( child.layer().extent() )
         
-	    print "set extend"
             self.canvas.setExtent( extent )
             self.canvas.refresh()
+            print "extend ok"
             #iface.mapCanvas().setExtent( extent )
             #iface.mapCanvas().refresh()
             
