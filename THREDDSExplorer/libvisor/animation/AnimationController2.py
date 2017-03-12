@@ -14,6 +14,9 @@ from datetime import timedelta
 # QGIS /PyQt libs:
 #from qgis.utils import iface
 from qgis.core import QgsMessageLog
+from qgis.gui import *
+from qgis.core import *
+
 from PyQt4.QtCore import QObject, QTimer, pyqtSignal, pyqtSlot, Qt
 # Our libs:
 print "Control 2"
@@ -72,7 +75,7 @@ class Controller(QObject):
     errorSignal = pyqtSignal(str)
     statusSignal = pyqtSignal(str)
 
-    def __init__(self,parent=None):
+    def __init__(self,canvas,parent=None):
         """Constructor."""
 
         #TODO: Remove debug
@@ -82,7 +85,8 @@ class Controller(QObject):
         print "Super ok"
         self.paused = True
         print type(parent)
-        self.canvas=parent
+        self.canvas=canvas
+        self.parent=parent
         self.playbackSpeed = 500
         self.timer = QTimer()
         print "Const ok1"
@@ -119,6 +123,7 @@ class Controller(QObject):
     #
     def play(self):
         print "inside play"
+        print len(self.animationGroups) 
         if self.animationGroups is not None and len(self.animationGroups) != 0:
             self.timer.start(self.playbackSpeed)
             self.paused = False
@@ -162,9 +167,10 @@ class Controller(QObject):
                 layer = animation.getFrameByTime(self.nextFrame,
                                                   self.timeDeviationTolerance)
                 try:
-                    print "set visible layer"
+                    print "set visible layer controller"
                     #iface.legendInterface().setLayerVisible(layer, True)
-                    self.canvas.legendInterface().setLayerVisible(layer, True)
+		    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Checked)
+                    #self.canvas.legendInterface().setLayerVisible(layer, True)
                     print "add to interface"
                 except RuntimeError:
                     #Will happen if the animator attempts to set as visible
@@ -241,7 +247,7 @@ class Controller(QObject):
 
         if not animationLayerList:
             raise AttributeError("Invalid data provided.")
-
+        print "setUpAnimation"
         self.initialize()
         self.animationLayerObjectList = animationLayerList
 
@@ -283,7 +289,7 @@ class Controller(QObject):
 
         # If no layers must be downloaded, it's over and ready:
         if not wmsLayers and not wcsLayers:
-            #print("READY WITHOUT LAYERS")
+            print("READY WITHOUT LAYERS")
             self.animatorCreated()
             return
 
@@ -440,14 +446,20 @@ class Controller(QObject):
         self.createLayerGroupsOnMainThread.emit(animationLayerObject, groupName)
 
     def createLayerGroup(self, animationLayerObject, groupName):
-        print "Add layer group"
+        print "Add layer group anim controler"
         layerList = animationLayerObject.getAnimationData().frameData.values()
-        groupifier = LayerGroupifier(layerList, groupName,parent=self.canvas)
+        print "Create LayerGroupifier"
+       # groupifier = LayerGroupifier(layerList, groupName,parent=self.canvas)
+        groupifier = LayerGroupifier(layerList, groupName,self.canvas,parent=self.parent)
+        print "Create LayerGroupifier OK"
         groupifier.statusSignal.connect(self.statusSignal)
         groupifier.groupifyComplete.connect(self._newLegendGroupReady)
+        print "Create LayerGroupifier connect"
         #We assign the generated group reference to this animationLayer object
         animationLayerObject.setAnimationLegendGroups(groupifier.getGeneratedGroup())
+        print "Set animation"
         groupifier.groupify()
+        print "add groupifier"
 
     def _newLegendGroupReady(self, qgsGroupObject):
         self.animationGroups.append(qgsGroupObject)
