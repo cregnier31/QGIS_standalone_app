@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # C.REGNIER February 2017
+print "import"
 from PyQt4 import QtGui, QtCore
 from PyQt4 import uic
 from PyQt4.QtCore import pyqtSlot, SIGNAL, Qt
@@ -37,6 +38,7 @@ from THREDDSExplorer.libvisor.providersmanagers.BoundingBoxInfo import BoundingB
 ## Set stack size and virtual memory to unlimited
 resource.setrlimit(resource.RLIMIT_STACK, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
 resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+print "import OK"
 
 class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
 
@@ -55,9 +57,9 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.logger.setLevel(20)
         # We add a status bar to this QDockWidget:
         self.statusbar = QStatusBar()
-        self.gridLayout.addWidget(self.statusbar)
-        self.gridLayout_7.addWidget(self.statusbar)
-        #self.initUX(parent)
+        self.verticalLayout_7.addWidget(self.statusbar)
+        self.gridLayout_3.addWidget(self.statusbar)
+        print "add status bar"
         #self.initProxy(parent)
         self.installEventFilter(self)
         logging.basicConfig()
@@ -71,6 +73,7 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.controller.mapInfoRetrieved.connect(self._onMapInfoReceivedFromController)
         self.controller.batchDownloadFinished.connect(self.createLayerGroup)
 ##      Actions for  Cmems page
+        self.LoadProductButton.clicked.connect(self.initUX)
         self.connect(self.combo_area_list, QtCore.SIGNAL("currentIndexChanged(int)"), self.openproducts)
         self.connect(self.combo_product_list, QtCore.SIGNAL("currentIndexChanged(int)"), self.opendatasets)
         self.connect(self.combo_dataset_cmems_list, QtCore.SIGNAL("currentIndexChanged(int)"), self.openvariables)
@@ -104,7 +107,7 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.firstRunThisSession = True
 
     def show(self):
-   ##     self.logger.info("Inside Show function")
+        self.logger.info("Inside Show function")
    ##     print self.canvas
    ##     print self
         self.canvas.addDockWidget(Qt.LeftDockWidgetArea, self)
@@ -118,9 +121,6 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.logger.info("Add dockwidget ok")
         self.logger.info("Show")
         super(THREDDSViewer, self).show()
-	print "Init UX"
-        #self.initUX(self.parent)
-	print "Init UX Ok"
         #self.initProxy(self.parent)
 
    ##     if self.firstRunThisSession:
@@ -142,25 +142,27 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         which is on QGIS load)."""
         pass
 
-    def initUX(self,parent):
+    def initUX(self):
 
         """ Init UX with a list of area """
 
-        self.logger.info("Load catalog for UX")
+        #self.logger.info("Load catalog for UX")
+        print "init UX"
         list_area=['ARCTIC','BAL','GLOBAL','IBI','MED','NWS']
         for area in list_area : 
             self.combo_area_list.addItem(str(area))
             self.combo_area_list.setEnabled(True)
             self.combo_product_list.setEnabled(False)
             self.combo_dataset_cmems_list.setEnabled(False)
-        filename=str(parent)+"/statics/cmems_dic_tot_pit.p"
-        self.tmp=str(parent)+"/tmp/"
-        self.mainobj=parent
+        filename=str(os.getcwd())+"/statics/cmems_dic_tot_pit.p"
+        print filename
+        self.tmp=str(os.getcwd())+"/tmp/"
         self.dict_var={}
         f = file(filename, 'r')
+        print 'load'
         self.dict_prod=cPickle.load(f)
         self.postInformationMessageToUser("Load Cmems catalog")
-        self.logger.info("Load catalog for UX ok")
+        #self.logger.info("Load catalog for UX ok")
 
     def initProxy(self,parent):
 
