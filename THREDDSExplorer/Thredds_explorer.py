@@ -79,7 +79,8 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.connect(self.combo_dataset_cmems_list, QtCore.SIGNAL("currentIndexChanged(int)"), self.openvariables)
         self.connect(self.combo_variable_list, QtCore.SIGNAL("currentIndexChanged(int)"), self.opentimeanddepth)
         self.connect(self.combo_proj, QtCore.SIGNAL("currentIndexChanged(int)"),self.changesrs)
-        self.button_req_map_plot.clicked.connect(self._onbuttonReqMapClicked)
+        #self.button_req_map_plot.clicked.connect(self._onbuttonReqMapClicked)
+        self.button_req_map_plot_cmems.clicked.connect(self._onbuttonReqMapPlotClicked)
         self.button_req_motu.clicked.connect(self._onbuttonMotuRequest)
 ##      Action for other page
         self.combo_dataset_list.currentIndexChanged.connect(self._onDataSetItemChanged)
@@ -205,23 +206,30 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
                # return super(Example, self).eventFilter(source, event)
 
     def cleardata(self):
+        self.logger.info("Clear data")
         self.combo_product_list.clear()
+        self.logger.info("Clear data 1")
         self.combo_dataset_cmems_list.clear()
+        self.logger.info("Clear data 2")
         self.combo_variable_list.clear()
+        self.logger.info("Clear data 3")
         self.combo_wms_time_first_d.clear()
         self.combo_wms_time_first_h.clear()
         self.combo_wms_time_last_d.clear()
         self.combo_wms_time_last_h.clear()
+        self.logger.info("Clear data 4")
         self.combo_wms_time_first_d_2.clear()
         self.combo_wms_time_first_h_2.clear()
         self.combo_wms_time_last_d_2.clear()
         self.combo_wms_time_last_h_2.clear()
+        self.logger.info("Clear data 5")
         self.combo_wms_layer_depth.clear()
         self.combo_wms_layer_depth_2.clear()
         self.combo_wms_layer_depth_max_2.clear()
+        self.logger.info("Clear data 6")
         self.combo_colorbar.clear()
         self.combo_proj.clear()
-        self.logger.info("Clear data")
+        self.logger.info("Clear data OK")
 
     def openproducts(self):
 
@@ -230,7 +238,9 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
         self.postInformationMessageToUser("Open Products...")
         self.logger.info("Open products")
         self.combo_product_list.setEnabled(True)
+        self.combo_dataset_cmems_list.setEnabled(True)
         frame=self.combo_area_list.currentText()
+        self.logger.info("Frame : %s " %(frame))
         self.cleardata()
         list_glo=[]
         if str(frame) == "GLOBAL":
@@ -238,8 +248,10 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
                 if str(frame) in key :
                     list_glo.append(str(key))
         ind=0
+        self.logger.info(list_glo)
         #print "Frame %s " %(frame)
         for key in self.dict_prod.keys():
+            self.logger.info( "Key %s " %(key))
             if str(frame) == "BAL":
                 frame1="_BAL_"
                 frame2="-BAL-"
@@ -251,9 +263,11 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
                 if frame1 in key or frame2 in key :
                     self.combo_product_list.addItem(str(key))
             elif str(frame) == "GLOBAL":
+                self.logger.info("Frame Global")
                 if str(frame) in key :
                     if ind ==  0 :
                         self.combo_product_list.addItem(list_glo[5])
+                        self.logger.info("Add item")
                     elif ind ==  5 : 
                         self.combo_product_list.addItem(list_glo[0])
                     else : 
@@ -262,7 +276,6 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
             else :
                 if str(frame) in key :
                     self.combo_product_list.addItem(str(key))
-        self.combo_dataset_cmems_list.setEnabled(True)
 
     def opendatasets(self): 
 
@@ -522,43 +535,57 @@ class THREDDSViewer(QtGui.QDockWidget,Ui_THREDDSViewer):
                                   time=date_val,
                                   colorscalerange=rastermin+','+rastermax,numcolorbands=nb_colors,logscale=False,
                                   styles=[style])
+        self.logger.info("Request WMS OK")
         image=imread(io.BytesIO(img.read()),format='png')
+        self.logger.info("Read Image ok")
         if variable == "sea_water_velocity" :
             ylabel="magnitude"
         else :
             ylabel=self.wms[variable].abstract
-
         long_name=self.wms[variable].title
         title=product+" - "+long_name+" "+" - "+date_val
-        file_pal='./palettes/thredds/'+colorbar+'.pal'
+        dir_statics=os.getcwd()+'/palette/thredds/'
+        file_pal=dir_statics+colorbar+'.pal'
+        if not os.path.isfile(file_pal): 
+            self.logger.error(" %s does not exist : " %(file_pal))
+            sys.exit(1)
+        self.logger.info("Compute palette %s " %(file_pal))
         my_cmap=compute_cmap(file_pal,colorbar)
         cm.register_cmap(name=colorbar, cmap=my_cmap)
         font=10
         norm = mpl.colors.Normalize(vmin=float(rastermin), vmax=float(rastermax), clip=False) 
         parallels=np.round(np.arange(ymin,ymax+xparallels/2,xparallels))
         meridians = np.round(np.arange(xmin,xmax+ymeridians/2,ymeridians))
+        self.logger.info("Plot figure")
         # Plot figure 
         plt.figure(figsize=(20,12))
         if epsg_val == '4326' :
-            m.drawcoastlines(color='lightgrey',linewidth=0.25)
-            m.fillcontinents(color='lightgrey')
-            m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=10,linewidth=0.2,dashes=[1, 5])
-            m.drawparallels(parallels,labels=[1,0,0,0],fontsize=10,linewidth=0.2)
-
+           m.drawcoastlines(color='lightgrey',linewidth=0.25)
+           m.fillcontinents(color='lightgrey')
+           m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=10,linewidth=0.2,dashes=[1, 5])
+           m.drawparallels(parallels,labels=[1,0,0,0],fontsize=10,linewidth=0.2)
         elif ll_polar == True : 
-            #m.drawcoastlines(linewidth=0.5)
-            m.drawparallels(parallels,labels=[1,0,0,0],fontsize=10,linewidth=0.2)
-            m.drawmeridians(meridians[:-1],labels=[1,1,1,1],fontsize=10,linewidth=0.2,dashes=[1, 5])
+           #m.drawcoastlines(linewidth=0.5)
+           m.drawparallels(parallels,labels=[1,0,0,0],fontsize=10,linewidth=0.2)
+           m.drawmeridians(meridians[:-1],labels=[1,1,1,1],fontsize=10,linewidth=0.2,dashes=[1, 5])
         ## Plot the image
         cs=m.imshow(image,origin='upper',alpha=1,cmap=(cm.get_cmap(colorbar,int(nb_colors))),norm=norm)
+        self.logger.info("Show ok")
         ## Add colorbar
+        self.logger.info("Add colorbar")
         cb=plt.colorbar(cs,orientation='vertical',format='%4.2f',shrink=0.7)
         cb.ax.set_ylabel(ylabel, fontsize=int(font)+4)
         cl=plt.getp(cb.ax, 'ymajorticklabels')
         plt.setp(cl, fontsize=font)
 
         plt.title(title,fontsize=font+4,y=1.05)
-        plt.savefig('images/'+product+"_"+long_name+"_"+date_val+"_basemap.png",dpi=300,bbox_inches='tight')
+        self.logger.info("Plot ok")
+        dirout=os.getcwd()+'/images/'
+        self.logger.info("Dirout %s " %(dirout))
+        if not os.path.exists(dirout):
+            log.info("Images dir %s" %(dirout))
+            os.makedirs(dirout)
+        plt.savefig(dirout+product+"_"+long_name+"_"+date_val+"_basemap.png",dpi=300,bbox_inches='tight')
         plt.show()
    
     def GetWMSImage(self,url_base,variable,xpixels,ypixels,epsg_val,xmin,ymin,xmax,ymax,depth,input_srs,date_val,rastermin,
