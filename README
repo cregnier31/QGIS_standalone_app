@@ -1,0 +1,5 @@
+PYTHONPATH=""
+source ~/virtualenvs/QGIS_standalone_app/bin/activate
+module load  qgis/qgis-2.8.1
+launch_centos2.ksh
+## test
