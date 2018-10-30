@@ -17,13 +17,16 @@ from gdalconst import *
 from osgeo import osr
 from math import ceil
 #from Class_Legend import *
+print "OK1"
 from Maptool_extension import *
-from MetaSearch.dialogs.maindialog import MetaSearchDialog
-from MetaSearch.dialogs.newconnectiondialog import NewConnectionDialog
-from MetaSearch.dialogs.manageconnectionsdialog import ManageConnectionsDialog
+##from MetaSearch.dialogs.maindialog import MetaSearchDialog
+##from MetaSearch.dialogs.newconnectiondialog import NewConnectionDialog
+##from MetaSearch.dialogs.manageconnectionsdialog import ManageConnectionsDialog
+print 'ok2'
 from Class_Legend import  *
 from GDALParameters import GDALParameters
 from Reader import read_netcdf_variable,array_to_raster,read_lightout
+print 'ok3'
 from Grid import Grid
 from VectorFieldRenderer import VectorFieldRenderer
 from VectorArrowMarker import VectorArrowMarker
@@ -33,6 +36,8 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.mlab import griddata
+#import xarray as xr
+print 'ok3'
 #from shapely.geometry import MultiLineString, MultiPolygon
 from VectorScaleBox import VectorScaleBox
 from VectorScaleBoxPluginLayer import VectorScaleBoxPluginLayer
@@ -97,6 +102,7 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
         self.cmemsuser=str(param_dict.get('cmems_server','user_cmems'))
         self.cmemspass=str(param_dict.get('cmems_server','pass_cmems'))
         ## Get sections
+        print "GET sections"
         dict_list_sect=self.get_allsect_withreg(str(self.homepath)+"/statics/Def_section.p")
         for key in dict_list_sect.keys():
             print key
@@ -114,6 +120,7 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             model.appendRow(item)
             for section in dict_list_sect[key]:
                 self.secVars.addItem(section[0])
+        print "GET sections ok"
         ## Connect the actions
         self.connect(self.secVars, SIGNAL("currentIndexChanged(QString)"),self.drawSection)
         self.connect(self.actionQuit,SIGNAL("triggered()"), qApp.quit)
@@ -128,32 +135,43 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
         self.connect(self.actionReadLightout, SIGNAL("triggered()"), self.ReadLightout)
         self.connect(self.actionReadhdf, SIGNAL("triggered()"), self.ReadHdf)
         self.connect(self.actionComputeDiff, SIGNAL("triggered()"), self.ComputeDiff)
+        print "Action 1 ok"
         self.connect(self.cboDim, SIGNAL("currentIndexChanged(QString)"), self.updateDims)
         self.connect(self.cboVars, SIGNAL("currentIndexChanged(QString)"), self.updateVariable)
         self.connect(self.cboNbcolor, SIGNAL("valueChanged(int)"),self.drawLayer)
         self.connect(self.combocolor,SIGNAL("currentIndexChanged(int)"),self.drawLayer) 
         self.connect(self.basemap, SIGNAL("clicked()"),self.on_basemap_triggered)
+        print "Action 2 ok"
         self.connect(self.proj, SIGNAL("clicked()"),self.on_proj_triggered)
-        self.connect(self.actionAddWmsLayer,SIGNAL("triggered()"), self.metaSearch)
+        print "Action 2.1 ok"
+        print "Action 2.2 ok"
+        #self.connect(self.actionAddWmsLayer,SIGNAL("triggered()"), self.metaSearch)
         self.connect(self.actionPlotCurrent,SIGNAL("triggered()"), self.init_PlotCurrent)
         self.connect(self.actionAddGridd,SIGNAL("triggered()"), self.init_PlotGrid)
         self.connect(self.actionRescaling, SIGNAL("triggered()"),self.drawLayer)
+        print "Action 2.3 ok"
         self.connect(self.invpal, SIGNAL("stateChanged(int)"),self.drawLayer)
+        print "Action 2.4 ok"
         self.connect(self.actionTransparency, SIGNAL("triggered()"),self.setTransparency)
         self.connect(self.actionContouring, SIGNAL("triggered()"),self.init_PlotContour)
+        print "Action 2.5 ok"
         self.connect(self.Valmaxvalue,SIGNAL("returnPressed ()"),self.drawLayer)
         self.connect(self.Valminvalue,SIGNAL("returnPressed ()"),self.drawLayer)
+        print "Action 2.6 ok"
+        print "Action 3 ok"
 #        self.connect(self.actionSaveMap, SIGNAL("triggered()"), self.saveMap)
         self.connect(self.actionPlotProfile,SIGNAL("triggered()"), self.getProfile)
         self.connect(self.actionGetValue, SIGNAL("triggered()"), self.getValue)
         self.connect(self.actionDistance, SIGNAL("triggered()"), self.getDistance)
         self.connect(self.actionCapture, SIGNAL("triggered()"), self.getLines)
-        self.connect(self.actionReadOla, SIGNAL("triggered()"), self.ReadOlaFile)
+        self.connect(self.actionReadOla, SIGNAL("triggered()"), self.ReadOlaFile_new)
         self.connect(self.actionExplore, SIGNAL("triggered()"), self.SetExploreMode)
         #self.connect(self.actionReadCmemsCatalog, SIGNAL("triggered()"), self.ReadCmemsCatalog)
+        print "Action 4 ok"
         self.connect(self.actionPlotsection, SIGNAL("triggered()"), self.PlotSection)
         self.connect(self.actionThreddsViewer, SIGNAL("triggered()"), self.ThreddsViewer)
         self.connect(self.canvas, SIGNAL( "xyCoordinates(const QgsPoint&)" ),self.updateXY )
+        print "Action 5 ok"
         # self.connect(self.canvas, SIGNAL("moved"),self.move_xy)
         #self.connect(self.canvas, SIGNAL("xyCoordinates(const QgsPoint&)"),self.move_xy )
         self.compose=1
@@ -256,14 +274,14 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             self.network_manager.setFallbackProxyAndExcludes(proxy, stringlist)
 
     def ThreddsViewer(self): 
-	print "Launch threddsViewer"
+        print "Launch threddsViewer"
         canvas=self.canvas
-        print type(canvas)
         install_dir=os.getcwd()
-	print install_dir
+        print install_dir
+
         #thredds = THREDDSViewer(self,install_dir)
         thredds = THREDDSViewer(self,canvas)
-	print "Launch threddsViewer show"
+        print "Launch threddsViewer show"
       #  self.canvas.mainWindow().addDockWidget(Qt.LeftDockWidgetArea,thredds)
         #self.addDockWidget(Qt.RightDockWidgetArea,thredds)
        # thredds=THREDDSViewer(self)
@@ -389,11 +407,152 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             self.selectLines.geometryCaptured(list_points,section_name,list_var,list_prof)
             #self.selectLines.geometryCaptured(list_points,section_name,list_var)
 
-    def ReadOlaFile(self):
+    def ReadOlaFile_new(self):
+        print ("Read ola file")
         fileName = QFileDialog.getOpenFileName(self, self.tr("Open File"), "",
                      self.tr("Ola in netcdf (*.nc *.NC )"));
         if fileName is not None:
-            oladialog=OlaParams()
+            print ("Ola not none")
+            oladialog=OlaParams(min_prof=0,max_prof=200)
+            oladialog.show()
+            if oladialog.exec_() == QDialog.Accepted:
+                self.prof_min = float(oladialog.minprof_fieldgrid.text())
+                self.prof_max = float(oladialog.maxprof_fieldgrid.text())
+                depth_min = -self.prof_max
+                depth_max = -self.prof_min
+                print "prof min max : %f %f  " %(self.prof_min,self.prof_max)
+            ## Find dimensions and variables
+            filevar=os.path.basename(str(fileName))
+            echeance=filevar.split('_')[3]
+            date_var1=filevar.split('_')[5]
+            date_var2=filevar.split('_')[6]
+            filename_layer_t="OLA_TEMP_prof_"+str(echeance)+"_"+date_var1+"_"+date_var2+"_"+str(self.prof_min)+"_"+str(self.prof_max)
+            filename_layer_s="OLA_PSAL_prof_"+str(echeance)+"_"+date_var1+"_"+date_var2+"_"+str(self.prof_min)+"_"+str(self.prof_max) 
+            # Define Qgis vector layer
+            self.OlaPointLayer_temp = QgsVectorLayer("Point?crs=EPSG:4326",filename_layer_t, "memory")
+            self.OlaPointLayer_psal = QgsVectorLayer("Point?crs=EPSG:4326",filename_layer_s, "memory")
+            ## Define QgsFields
+            vpr_1 = self.OlaPointLayer_temp.dataProvider()
+            vpr_2 = self.OlaPointLayer_psal.dataProvider()
+            qd = QVariant.Double
+            qi =  QVariant.Int
+            qs=  QVariant.String
+            ## Create Attributes fields
+            vpr_1.addAttributes([QgsField ("id", QVariant.UInt), QgsField ("Misfit",QVariant.Double), QgsField ("Value_id",qi), 
+                                 QgsField("time", qd),QgsField("name", qs),QgsField("profile", qi)])
+            self.OlaPointLayer_temp.updateFields()
+            vpr_2.addAttributes([QgsField ("id", QVariant.UInt), QgsField ("Misfit",qd), QgsField ("Value_id",qi),
+                                 QgsField("time", qd),QgsField("name", qs),QgsField("profile", qi)])
+            self.OlaPointLayer_psal.updateFields()
+            ## Read Ola position
+            nc_file=netCDF4.Dataset(str(fileName),'r')
+            lon = nc_file.variables['longitude_VP'][:]
+            lat = nc_file.variables['latitude_VP'][:]
+            time_VP = nc_file.variables['time_VP'][:]
+            duid_prof = nc_file.variables['duid'][:]
+            prof_VP_TEMP=nc_file.variables['depth_TEMP'][:,:]
+            prof_VP_PSAL=nc_file.variables['depth_PSAL'][:,:]
+            temp_var=nc_file.variables['TEMP'][:,:]
+            psal_var=nc_file.variables['PSAL'][:,:]
+            print "Read OK new"
+            if  echeance == 'FCST' : 
+                temp_mod=nc_file.variables['first_frcst_temp'][:,:]
+                psal_mod=nc_file.variables['first_frcst_psal'][:,:]
+            elif  echeance == 'ANA' : 
+                temp_mod=nc_file.variables['second_frcst_temp'][:,:]
+                psal_mod=nc_file.variables['second_frcst_psal'][:,:]
+            else : 
+                print 'echeance not known %s '%(echeance)
+            name_prof =  nc_file.variables['setid_VP'][:]
+            nb_points_tot=len(lon)
+            fields_1 = vpr_1.fields()
+            fields_2 = vpr_2.fields()
+            feature_list=[]
+            feature_list2=[]
+            charts={}
+            ## Select profiles for a defined depth range
+            for pt in range(nb_points_tot):
+                #print("loop %i "%(pt))
+                prof_val=prof_VP_TEMP[pt,:]
+                insitu_temp_val=temp_var[pt,:]
+                insitu_psal_val=psal_var[pt,:]
+                fcst_val_temp=temp_mod[pt,:]
+                fcst_val_psal=psal_mod[pt,:]
+                time_value=float(time_VP[pt])
+                id_duid=int(duid_prof[pt])
+                ind = np.where((prof_VP_TEMP[pt,:] > depth_min) & (prof_VP_TEMP[pt,:] < depth_max))
+                if len(ind[0])> 0 :
+                    misfit = abs( np.nanmean(fcst_val_temp[ind] - insitu_temp_val[ind]))
+                    x=float(lon[pt]) 
+                    y=float(lat[pt])
+                    point = QgsPoint(x,y)
+                    namevalue=str("".join(name_prof[pt]).strip()).split('.')[0]
+                    ## Populate feature for temp
+                    feature = QgsFeature(self.OlaPointLayer_temp.pendingFields())
+                    feature.setGeometry(QgsGeometry.fromPoint(point))
+                    feature.setFields(fields_1)
+                    feature.setAttribute("Value_id",id_duid)
+                    feature.setAttribute("time", time_value)
+                    feature.setAttribute("Misfit", float(misfit))
+                    feature.setAttribute("name",'TEMP_'+namevalue)
+                    feature.setAttribute("profile", pt)
+                    feature_list.append(feature)
+            ## Add features"
+            vpr_1.addFeatures(feature_list)
+            self.OlaPointLayer_temp.updateExtents() 
+            vpr_2.addFeatures(feature_list2)
+            self.OlaPointLayer_psal.updateExtents()
+            ## Add symbology"
+            fields=self.OlaPointLayer_temp.pendingFields()
+            field_names = [field.name() for field in fields]
+            self.applySymbologyFixedDivisions( self.OlaPointLayer_temp, "Misfit")
+            ## Add layer to registry"
+            QgsMapLayerRegistry.instance().addMapLayer(self.OlaPointLayer_temp)
+            self.exploreTool=ExploreTool(self.canvas,self.ll_standalone,fileName)
+            self.exploreTool.setAction(self.actionExplore)
+            self.actionExplore.setEnabled(True)
+            self.GroupBoxPal.setEnabled(True)
+
+    def validatedDefaultSymbol(self, geometryType ):
+        symbol = QgsSymbolV2.defaultSymbol( geometryType )
+        if symbol is None:
+            if geometryType == QGis.Point:
+                print "Point"
+                symbol = QgsMarkerSymbolV2()
+            elif geometryType == QGis.Line:
+                symbol =  QgsLineSymbolV2 ()
+            elif geometryType == QGis.Polygon:
+                symbol = QgsFillSymbolV2 ()
+        return symbol
+
+    def makeSymbologyForRange(self, layer, min , max, title, color):
+        opacity = 0.8
+        symbol = self.validatedDefaultSymbol( layer.geometryType() )
+        symbol.setColor( color )
+        symbol.setAlpha(opacity)
+        print (type(min),type(max))
+        print (min,max)
+        range = QgsRendererRangeV2( float(min), float(max), symbol, title )
+        return range
+   
+    def applySymbologyFixedDivisions(self, layer, field ):
+        rangeList = []
+        rangeList.append( self.makeSymbologyForRange( layer, 0.0, 0.50, '<0.5', QColor("Green") ) )
+        rangeList.append( self.makeSymbologyForRange( layer, 0.50, 0.75, '>0.5 <0.75',  QColor("Yellow") ) )
+        rangeList.append( self.makeSymbologyForRange( layer, 0.75, 1.0, '>0.75 < 1', QColor("Orange") ) )
+        rangeList.append( self.makeSymbologyForRange( layer, 1.0,9999.00, '>1', QColor("Red") ) )
+        renderer = QgsGraduatedSymbolRendererV2( field, rangeList )
+        renderer.setMode( QgsGraduatedSymbolRendererV2.Custom )
+        layer.setRendererV2( renderer )
+
+
+    def ReadOlaFile(self):
+        print ("Read ola file")
+        fileName = QFileDialog.getOpenFileName(self, self.tr("Open File"), "",
+                     self.tr("Ola in netcdf (*.nc *.NC )"));
+        if fileName is not None:
+            print ("Ola not none")
+            oladialog=OlaParams(min_prof=0,max_prof=200)
             oladialog.show()
             if oladialog.exec_() == QDialog.Accepted:
                 self.prof_min = float(oladialog.minprof_fieldgrid.text())
@@ -402,8 +561,8 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             ## Find dimensions and variables
             filevar=os.path.basename(str(fileName))
             echeance=filevar.split('_')[3]
-            date_var1=filevar.split('_')[6]
-            date_var2=filevar.split('_')[7]
+            date_var1=filevar.split('_')[5]
+            date_var2=filevar.split('_')[6]
             filename_layer_t="OLA_TEMP_prof_"+str(echeance)+"_"+date_var1+"_"+date_var2+"_"+str(self.prof_min)+"_"+str(self.prof_max)
             filename_layer_s="OLA_PSAL_prof_"+str(echeance)+"_"+date_var1+"_"+date_var2+"_"+str(self.prof_min)+"_"+str(self.prof_max) 
             #self.OlaPointLayer = QgsVectorLayer("Point?crs=EPSG:4326&field=time:double&field=name:string(255)&field=Value_id:integer&index=yes",\
@@ -433,9 +592,11 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             lat = nc_file.variables['latitude_VP'][:]
             time_VP = nc_file.variables['time_VP'][:]
             duid_prof = nc_file.variables['duid'][:]
-            prof_VP=nc_file.variables['depth'][:,:]
+            prof_VP_TEMP=nc_file.variables['depth_TEMP'][:,:]
+            prof_VP_PSAL=nc_file.variables['depth_PSAL'][:,:]
             temp_var=nc_file.variables['TEMP'][:,:]
             psal_var=nc_file.variables['PSAL'][:,:]
+            print "Read OK"
             if  echeance == 'FCST' : 
                 temp_mod=nc_file.variables['first_frcst_temp'][:,:]
                 psal_mod=nc_file.variables['first_frcst_psal'][:,:]
@@ -446,7 +607,6 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
                 print 'echeance not known %s '%(echeance)
             name_prof =  nc_file.variables['setid_VP'][:] 
             nb_points=len(lon) 
-            print "Read OK"
             #self.OlaPointLayer.dataProvider().addAttributes([QgsField ("id", QVariant.UInt), QgsField ("NAME_ID",QVariant.UInt)])
            # self.OlaPointLayer.dataProvider().addAttributes([QgsField ("id", QVariant.UInt), QgsField ("NAME_ID",self.qd)])
            # self.OlaPointLayer.updateFields()
@@ -466,7 +626,7 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
                 #print '------------------------------'
                 #print "x  y %f %f " %(x,y)
                 ## open prof and var
-                prof_val=prof_VP[pt,:]
+                prof_val=prof_VP_TEMP[pt,:]
                 insitu_temp_val=temp_var[pt,:]
                 insitu_psal_val=psal_var[pt,:]
                 fcst_val_temp=temp_mod[pt,:]
@@ -561,6 +721,15 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
         #QgsMapLayerRegistry.instance().addMapLayer( self.startPointLayer)
         #self.layers.append(QgsMapCanvasLayer(self.startPointLayer)) 
         self.setupRendererLayer()
+
+    #def setupRendererFeature(self, color):
+    #    root_rule = QgsRuleBasedRendererV2.Rule(None)
+    #    symbol = QgsLineSymbolV2.createSimple({'color' : color})
+    #    symbol.setWidth(0.5)
+    #    rule = QgsRuleBasedRendererV2.Rule(symbol, elseRule=True)
+    #    root_rule.appendChild(rule)
+    #    renderer = QgsRuleBasedRendererV2(root_rule)
+    #    self.setRendererV2(renderer)
 
     def setupRendererLineLayer(self):
         root_rule = QgsRuleBasedRendererV2.Rule(None)
@@ -1061,11 +1230,11 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
             ll_color=False
             self.updateFileVector(fileName,20,ll_color)
             self.GroupBoxPal.setEnabled(True) 
-    def metaSearch(self):
-        print "OPEN Metasearch"
-        # Open CSW plugin
-        self.openCSWplugin= MetaSearchDialog(self.canvas)
-        self.openCSWplugin.exec_()
+    ##def metaSearch(self):
+    ##    print "OPEN Metasearch"
+    ##    # Open CSW plugin
+    ##    self.openCSWplugin= MetaSearchDialog(self.canvas)
+    ##    self.openCSWplugin.exec_()
     def updateFileRaster(self,name):
         print "updateFileRaster"
         self.layer_raster=QgsRasterLayer(name,os.path.basename(str(name)))   
@@ -1503,7 +1672,7 @@ class Mercator_Explorer(QMainWindow,Ui_ExplorerWindow):
                 ramp_item = QgsColorRampShader.ColorRampItem(value, colour, label)
                 items.append(ramp_item)
                 value=value+intervalDiff
-         # Create Raster Shader
+            # Create Raster Shader
             raster_shader = QgsRasterShader()
             color_ramp_shader = QgsColorRampShader() 
             color_ramp_shader.setColorRampType(QgsColorRampShader.INTERPOLATED)
