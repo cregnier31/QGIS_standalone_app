@@ -95,7 +95,7 @@ class LayerGroupifier(QObject):
                 print type(self.canvas)
                 print type(self.parent)
                 print (layer)
-                QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Unchecked)
+                #QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Unchecked)
                # self.canvas.legendInterface().setLayerVisible(layer, False)
                 print "set visible layer ok"
             #We combine the group extents so all the layers are zoomed

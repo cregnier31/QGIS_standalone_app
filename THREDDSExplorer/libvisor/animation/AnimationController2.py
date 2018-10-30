@@ -169,7 +169,7 @@ class Controller(QObject):
                 try:
                     print "set visible layer controller"
                     #iface.legendInterface().setLayerVisible(layer, True)
-		    QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Checked)
+                    #QgsProject.instance().layerTreeRoot().findLayer(layer.id()).setVisible(Qt.Checked)
                     #self.canvas.legendInterface().setLayerVisible(layer, True)
                     print "add to interface"
                 except RuntimeError:

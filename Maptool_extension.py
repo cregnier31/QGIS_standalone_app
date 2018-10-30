@@ -5,23 +5,16 @@ from qgis.gui import *
 from qgis.utils import iface
 import qgis.utils
 import os, sys,re,math
-print "import"
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtCore, QtGui
 import netCDF4
 import numpy as np
-print "import"
 import matplotlib.pyplot as plt
-print "import"
 from matplotlib import style 
-print "import"
 from  Class_section import Section
-print "import section"
 from ui_user_interface_dialogs import OlaParams 
-print "import sytoolkit1yy"
 from sytoolkit.sydate import SyDate
-print "import sytoolkit ok"
 import cPickle
 ### Extension of a maptool object
 class MapToolMixin:
@@ -71,7 +64,6 @@ class MapToolMixin:
             featureIDs.append(feature.id())
             provider.deleteFeatures(featureIDs) 
     def plot(self,prof,var_insitu,var_mod,label,time_label):
-        print "inside plot"
         style.use('ggplot')
         fig, ax = plt.subplots(figsize=(5, 7))
         #if ( max(depth) > 0 ) :
@@ -137,6 +129,11 @@ class ExploreTool(QgsMapToolIdentify,MapToolMixin):
            prof_id=prof_id.toPyObject()
         if prof_id != None: info.append("  NB prof : "+str(prof_id))
         name_var = feature.attribute("name")
+        misfit = feature.attribute("Misfit")
+        print (type(misfit))
+        misfit=misfit.toPyObject()
+        print (type(misfit))
+
         time_var = feature.attribute("time")
         if name_var and time_var:
            if self.ll_standalone:
@@ -163,15 +160,23 @@ class ExploreTool(QgsMapToolIdentify,MapToolMixin):
         print "OK Vertex"
         #print longitude,latitude,first_frcst_temp
         info.append("Lat/Long: %0.4f, %0.4f" % (latitude,longitude))
+        info.append("Misfit: %6.4f" % (misfit))
         QMessageBox.information(self.canvas,"Feature Info","\n".join(info))
         ## Plot the profile
         Type_var=str(name_var[0:4])
         indice=int(prof_id)
         nc_file=netCDF4.Dataset(str(self.filename),'r')
-        prof_VP=nc_file.variables['depth'][indice,:]
+        prof_VP=nc_file.variables['depth_'+Type_var][indice,:]
         insitu_var=nc_file.variables[Type_var][indice,:]
-        mod_var=nc_file.variables['first_frcst_'+Type_var.lower()][indice,:]
+        echeance = os.path.basename(str(self.filename)).split('_')[3]
+        if echeance == "ANA":
+            variable = 'second_frcst_'+Type_var.lower()
+        elif echeance == "FCST":
+            variable = 'first_frcst_'+Type_var.lower()
+        mod_var=nc_file.variables[variable][indice,:]
         self.plot(prof_VP,insitu_var,mod_var,Type_var,time_var)
+        ## Add to registry
+        QgsMapLayerRegistry.instance().addMapLayers([self.m])   
         print "init bar"
       ##  bar=Bar()
       ##  bar.resize(300,40)
@@ -301,6 +306,7 @@ class PointTool(QgsMapTool):
 
 
     def plot(self):
+       print ("Inside plot")
        style.use('ggplot')
        fig, ax = plt.subplots(figsize=(5, 7))
        #if ( max(depth) > 0 ) :
@@ -749,7 +755,7 @@ class SelectVertexTool(QgsMapTool, MapToolMixin):
             print "variable : %s" %(str(variable))
             lon = nc_file.variables['longitude'][:]
             lat = nc_file.variables['latitude'][:]
-            self.prof=nc_file.variables['depth'][:]
+            self.prof=nc_file.variables['depth_TEMP'][:]
             min_prof=np.nanmin(self.prof)
             max_prof=np.nanmax(self.prof)
             profdialog=OlaParams(str(min_prof),str(max_prof))
